@@ -33,7 +33,7 @@ def entry_lookup(word, language, version):
             return ['Guth amháin'], ['Guth amháin'], None
 
     html = response.read()
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html,'html.parser')
     entry = soup.findAll("div", class_=breis_slug[language] + " entry")
     suggestions = soup.findAll("div", class_="suggestions")
     form_of = soup.findAll("div", class_="know")
@@ -56,7 +56,7 @@ def gaeilge_gaeilge(word):
     soup = BeautifulSoup(html)
     entry = soup.findAll("div", class_="fb entry")
     return entry
-            
+
 
 def entry_cleanup(html):
         """This function appends the text of the html to the list and returns it"""
@@ -102,4 +102,3 @@ def language_change(string):
     language_head = "Focail chosúla: "
 
     return language_head + words
-

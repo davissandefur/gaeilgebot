@@ -7,9 +7,9 @@ updater = Updater(token=config.TOKEN)
 dispatcher = updater.dispatcher
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def start(bot, update):
-    bot.sendMessage(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
+
 
 def caps(bot, update, args):
     print(args)
@@ -22,8 +22,12 @@ def irish(bot, update, args):
         bot.sendMessage(chat_id=update.message.chat_id, text="Please input a word to translate")
         return
     entry = args[0]
-    entries, suggestions, wordlist, grammatical = irish_dictionary(entry, 'irish', 'gaeilge')
+    entries, suggestions, wordlist, grammatical = irish_dictionary(entry, 'irish', 'english')
+    if len(entries) == 0:
+        bot.sendMessage(chat_id=update.message.chat_id, text="Word not found in the Foclóir Gaeilge-Béarla")
     for defi in entries:
+        if len(defi) > 4096:
+            defi = defi[:4095]
         bot.sendMessage(chat_id=update.message.chat_id, text=defi)
 
 def english(bot, update, args):
@@ -32,18 +36,26 @@ def english(bot, update, args):
         return
     entry = args[0]
     entries, suggestions, wordlist, grammatical = irish_dictionary(entry, 'english', 'english')
+    if len(entries) == 0:
+        bot.sendMessage(chat_id=update.message.chat_id, text="Word not found in the English-Irish Dictionary")
     for defi in entries:
+        if len(defi) > 4096:
+            defi = defi[:4095]
         bot.sendMessage(chat_id=update.message.chat_id, text=defi)
 
 
-start_handler = CommandHandler('start',start)
+def error(bot, update, error):
+    logger.warn('Update %s caused error "%s"' % (update, error))
+
 caps_handler = CommandHandler('caps', caps, pass_args=True)
 irish_handler = CommandHandler('ga', irish, pass_args=True)
 english_handler = CommandHandler('en', english, pass_args=True)
 
-dispatcher.add_handler(start_handler)
+
+
 dispatcher.add_handler(caps_handler)
 dispatcher.add_handler(irish_handler)
 dispatcher.add_handler(english_handler)
+dispatcher.add_error_handler(error)
 
 updater.start_polling()
