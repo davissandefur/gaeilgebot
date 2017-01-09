@@ -1,6 +1,6 @@
 # Irish Dictionary Checker Modules
 # Saved as dictionary_functions.py
-# Created by Davis Sandefur; last updated 22.12.14
+# Created by Davis Sandefur; last updated 7.1.17
 
 """This module contains all the functions needed to scrub teanglann.ie,
 either in English or Irish , as well as the functions needed to parse the HTML
@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 
 def entry_lookup(word, language, version):
     """ This function searches and gets the data for entry and suggestion
-    from teanglann.ie.
+    and if it's a grammatical form of another word from teanglann.ie.
     """
     word = urllib.parse.quote_plus(word)
     language = language.lower()
@@ -44,7 +44,8 @@ def entry_lookup(word, language, version):
 
 
 def gaeilge_gaeilge(word):
-    """ This function searches and gets the data for the An Foclóir Beag entry from teanglann.ie
+    """ This function searches and gets the data for the An Foclóir Beag entry
+    from teanglann.ie
     """
     word = urllib.parse.quote_plus(word)
     try:
@@ -77,8 +78,9 @@ def entry_cleanup(html):
 
 
 def word_store(word, wordlist):
-    """ This function takes a word and a word list. If the word list is longer than 5 words, it deletes the last one
-    and adds the word given to the front. If less than 5, it just adds it to the front.
+    """ This function takes a word and a word list. If the word list is longer
+    than 5 words, it deletes the last one and adds the word given to the front.
+    If less than 5, it just adds it to the front.
     """
     wordlist.insert(0, word)
     if len(wordlist) > 5:

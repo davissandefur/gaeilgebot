@@ -20,7 +20,8 @@ def irish_dictionary(word, language, version, wordlist=[]):
     # Get entries and suggestions in a list using HTMLRead class
     entries = dictionary_functions.entry_cleanup(entry)
     suggestions = dictionary_functions.entry_cleanup(suggestion)
-    suggestions = dictionary_functions.string_cleanup(suggestions)
+    if suggestions:
+        suggestions = dictionary_functions.string_cleanup(suggestions)
 
     if form_of is not None:  # If it exists
         form_of = dictionary_functions.entry_cleanup(form_of)
